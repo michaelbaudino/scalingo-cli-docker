@@ -1,0 +1,13 @@
+language: minimal
+
+services:
+  - docker
+
+script:
+  - docker build . --tag michaelbaudino/scalingo-cli
+  - if [[ ${TRAVIS_BRANCH} = "master" && -z ${TRAVIS_PULL_REQUEST_BRANCH} ]]; then
+      echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USER}" --password-stdin;
+      docker push michaelbaudino/scalingo-cli;
+    else
+      echo "This is not a commit on master. Not pushing the built image anywhere.";
+    fi
