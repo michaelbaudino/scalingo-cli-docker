@@ -3,10 +3,12 @@ language: minimal
 services:
   - docker
 
+before_script:
+  - echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USER}" --password-stdin
+
 script:
   - docker build . --tag michaelbaudino/scalingo-cli
   - if [[ ${TRAVIS_BRANCH} = "main" && -z ${TRAVIS_PULL_REQUEST_BRANCH} ]]; then
-      echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USER}" --password-stdin;
       docker push michaelbaudino/scalingo-cli;
     else
       echo "This is not a commit on main branch. Not pushing the built image anywhere.";
